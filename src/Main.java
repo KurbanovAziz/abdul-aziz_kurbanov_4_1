@@ -1,12 +1,12 @@
 import java.util.Random;
 
 public class Main {
-    public static int bossHealth = 700;
+    public static int bossHealth = 7000;
     public static int bossDamage = 50;
     public static String bossDefenceType;
-    public static int[] heroesHealth = {250, 260, 170, 300};
-    public static int[] heroesDamage = {25, 20, 15, 0};
-    public static String[] heroesAttackType = {"Physical", "Magical", "Kinetic", "Medic"};
+    public static int[] heroesHealth = {250, 260, 170, 300,500, 250, 300, 270};
+    public static int[] heroesDamage = {25, 20, 15, 0, 5, 10, 20, 15};
+    public static String[] heroesAttackType = {"Physical", "Magical", "Kinetic", "Medic", "Golem", "Lucky", "Berserk", "Thor"};
     public static int roundNumber = 0;
 
     public static void main(String[] args) {
@@ -15,6 +15,35 @@ public class Main {
             playRound();
         }
 
+    }
+    public static void thor() {
+        Random thorEffect = new Random();
+        boolean stop = thorEffect.nextBoolean();
+        if (heroesHealth[7] > 0 && stop){
+            bossDamage = 0;
+        }
+    }
+
+    public static void blocking() {
+        Random randomBlocking = new Random();
+        int blocking = randomBlocking.nextInt(22);
+        if (heroesHealth[6] > 0){
+            heroesDamage[6] += blocking;
+            heroesHealth[6] += blocking;
+        }
+    }
+
+    public static void lucky() {
+        Random randomLucky = new Random();
+        boolean randomEvade = randomLucky.nextBoolean();
+        if (randomEvade) {
+            heroesHealth[5] += bossDamage;
+        }
+    }
+
+
+    public static void golem() {
+        bossDamage -= bossDamage / 5;
     }
 
     public static boolean treatMedic() {
@@ -26,7 +55,6 @@ public class Main {
                     treat = false;
                     break;
                 }
-
             }
         }
         return treat;
@@ -39,6 +67,10 @@ public class Main {
         heroesHit();
         printStatistics();
         treatMedic();
+        thor();
+        blocking();
+        lucky();
+        golem();
     }
 
     public static void chooseBossDefence() {
@@ -48,7 +80,9 @@ public class Main {
     }
 
     public static void bossHits() {
+
         for (int i = 0; i < heroesHealth.length; i++) {
+
             if (heroesHealth[i] > 0) {
                 if (heroesHealth[i] - bossDamage < 0) {
                     heroesHealth[i] = 0;
@@ -56,6 +90,7 @@ public class Main {
                     heroesHealth[i] = heroesHealth[i] - bossDamage; // heroesHealth[i] -= bossDamage
                 }
             }
+
         }
     }
 
